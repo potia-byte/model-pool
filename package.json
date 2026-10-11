@@ -1,0 +1,27 @@
+{
+  "name": "model-pool",
+  "version": "0.1.0",
+  "description": "Policy-driven pool of free/free-tier LLM API providers: routing, health tracking, quota-aware fallback.",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20.3" },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist", "config"],
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "build": "tsc -p tsconfig.build.json",
+    "demo": "tsx scripts/demo.ts",
+    "demo:live": "tsx scripts/demo-live.ts"
+  },
+  "dependencies": {
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "26.3.0",
+    "tsx": "4.23.12",
+    "typescript": "7.0.2",
+    "vitest": "4.1.11"
+  }
+}

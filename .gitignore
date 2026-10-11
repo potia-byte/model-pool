@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.model-pool/
+.env
+.env.local
+.env.*.local
+*.tmp
