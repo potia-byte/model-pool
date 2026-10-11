@@ -1,0 +1,723 @@
+{
+  "version": 1,
+  "providers": {
+    "gemini": {
+      "displayName": "Gemini",
+      "envKeys": ["GEMINI_API_KEY", "GOOGLE_API_KEY"],
+      "baseUrl": "https://generativelanguage.googleapis.com/v1beta/openai",
+      "stripPrefix": "models/",
+      "defaultPricing": "free_tier",
+      "trustListingPrice": false,
+      "note": "Free tier covers Flash/Flash-Lite and Gemma; Pro models are metered so they are marked paid.",
+      "exclude": [
+        "tts",
+        "image",
+        "embedding",
+        "veo",
+        "lyria",
+        "transcribe",
+        "live",
+        "aqa",
+        "omni",
+        "antigravity",
+        "customtools",
+        "nano-banana",
+        "audio",
+        "robotics",
+        "computer-use"
+      ],
+      "rules": [
+        {
+          "match": "^gemini-.*pro",
+          "coding": 3,
+          "reasoning": 3,
+          "pricing": "paid"
+        },
+        {
+          "match": "^gemini-(?:[\\d.]+-)?flash-lite(?:-latest|-preview)?$",
+          "coding": 2,
+          "reasoning": 1,
+          "toolCalling": true,
+          "structuredOutput": true,
+          "contextWindow": 1048576
+        },
+        {
+          "match": "^gemini-(?:[\\d.]+-)?flash(?:-latest|-preview)?$",
+          "coding": 2,
+          "reasoning": 2,
+          "toolCalling": true,
+          "structuredOutput": true,
+          "contextWindow": 1048576
+        },
+        {
+          "match": "^gemma-",
+          "coding": 1,
+          "reasoning": 1,
+          "toolCalling": false,
+          "structuredOutput": false,
+          "contextWindow": 131072
+        }
+      ],
+      "validationModel": "gemini-flash-lite-latest",
+      "effort": {
+        "kind": "reasoning_effort",
+        "models": "^gemini-(?:[\\d.]+-)?flash"
+      }
+    },
+    "groq": {
+      "displayName": "Groq",
+      "envKeys": ["GROQ_API_KEY"],
+      "baseUrl": "https://api.groq.com/openai/v1",
+      "defaultPricing": "free_tier",
+      "trustListingPrice": false,
+      "exclude": [
+        "whisper",
+        "orpheus",
+        "guard",
+        "safeguard",
+        "compound",
+        "tts",
+        "allam"
+      ],
+      "rules": [
+        {
+          "match": "^openai/gpt-oss-120b$",
+          "coding": 3,
+          "reasoning": 3,
+          "toolCalling": true,
+          "structuredOutput": true,
+          "contextWindow": 131072
+        },
+        {
+          "match": "^openai/gpt-oss-20b$",
+          "coding": 2,
+          "reasoning": 2,
+          "toolCalling": true,
+          "structuredOutput": true,
+          "contextWindow": 131072
+        },
+        {
+          "match": "^moonshotai/kimi-k",
+          "coding": 3,
+          "reasoning": 3,
+          "toolCalling": true,
+          "contextWindow": 131072
+        },
+        {
+          "match": "^qwen/qwen3",
+          "coding": 2,
+          "reasoning": 2,
+          "toolCalling": true,
+          "contextWindow": 131072
+        },
+        {
+          "match": "^meta-llama/llama-3\\.3-70b",
+          "coding": 2,
+          "reasoning": 2,
+          "toolCalling": true,
+          "contextWindow": 131072
+        }
+      ],
+      "validationModel": "openai/gpt-oss-20b",
+      "effort": {
+        "kind": "reasoning_effort",
+        "models": "gpt-oss"
+      }
+    },
+    "cerebras": {
+      "displayName": "Cerebras",
+      "envKeys": ["CEREBRAS_API_KEY"],
+      "baseUrl": "https://api.cerebras.ai/v1",
+      "defaultPricing": "free_tier",
+      "trustListingPrice": false,
+      "note": "Free-tier context is capped well below the models' native window.",
+      "exclude": ["guard", "embed"],
+      "rules": [
+        {
+          "match": "gpt-oss-120b",
+          "coding": 3,
+          "reasoning": 3,
+          "toolCalling": true,
+          "structuredOutput": true,
+          "contextWindow": 65536
+        },
+        {
+          "match": "^qwen-3",
+          "coding": 2,
+          "reasoning": 2,
+          "toolCalling": true,
+          "structuredOutput": true,
+          "contextWindow": 65536
+        },
+        {
+          "match": "^llama.*70b",
+          "coding": 2,
+          "reasoning": 2,
+          "toolCalling": true,
+          "contextWindow": 65536
+        }
+      ],
+      "effort": {
+        "kind": "reasoning_effort",
+        "models": "gpt-oss"
+      }
+    },
+    "mistral": {
+      "displayName": "Mistral",
+      "envKeys": ["MISTRAL_API_KEY"],
+      "baseUrl": "https://api.mistral.ai/v1",
+      "defaultPricing": "free_tier",
+      "trustListingPrice": false,
+      "note": "Assumes the key is on the free Experiment plan; dated snapshots are excluded in favour of the -latest aliases.",
+      "exclude": [
+        "embed",
+        "ocr",
+        "moderation",
+        "voxtral",
+        "vibe",
+        "labs",
+        "transcribe",
+        "tts",
+        "-\\d{4}$",
+        "-\\d{4}-\\d+$"
+      ],
+      "rules": [
+        {
+          "match": "^mistral-medium(?:-latest)?$",
+          "coding": 3,
+          "reasoning": 2,
+          "toolCalling": true,
+          "structuredOutput": true,
+          "contextWindow": 131072
+        },
+        {
+          "match": "^mistral-small-latest$",
+          "coding": 2,
+          "reasoning": 2,
+          "toolCalling": true,
+          "structuredOutput": true,
+          "contextWindow": 131072
+        },
+        {
+          "match": "^codestral-latest$",
+          "coding": 3,
+          "reasoning": 1,
+          "toolCalling": true,
+          "structuredOutput": true,
+          "contextWindow": 256000
+        },
+        {
+          "match": "^magistral-(?:small|medium)-latest$",
+          "coding": 2,
+          "reasoning": 3,
+          "toolCalling": true,
+          "structuredOutput": true,
+          "contextWindow": 131072
+        },
+        {
+          "match": "^ministral-(?:8b|14b)-latest$",
+          "coding": 2,
+          "reasoning": 1,
+          "toolCalling": true,
+          "structuredOutput": true,
+          "contextWindow": 131072
+        },
+        {
+          "match": "^ministral-3b-latest$",
+          "coding": 1,
+          "reasoning": 1,
+          "toolCalling": true,
+          "structuredOutput": true,
+          "contextWindow": 131072
+        }
+      ],
+      "validationModel": "ministral-3b-latest"
+    },
+    "cloudflare": {
+      "displayName": "Cloudflare",
+      "envKeys": ["CLOUDFLARE_API_TOKEN"],
+      "baseUrl": "https://api.cloudflare.com/client/v4/accounts/{CLOUDFLARE_ACCOUNT_ID}/ai/v1",
+      "accountLookupUrl": "https://api.cloudflare.com/client/v4/accounts",
+      "discovery": "cloudflare-search",
+      "discoveryPath": "/../models/search?per_page=100&task=Text%20Generation",
+      "defaultPricing": "free_tier",
+      "trustListingPrice": false,
+      "note": "Workers AI free allocation only; assumes the account is not on a paid Workers plan. Account id is looked up from the token when CLOUDFLARE_ACCOUNT_ID is unset.",
+      "exclude": ["lora", "guard", "vision", "sea-lion"],
+      "rules": [
+        {
+          "match": "gpt-oss-120b$",
+          "coding": 3,
+          "reasoning": 3,
+          "toolCalling": true,
+          "contextWindow": 128000
+        },
+        {
+          "match": "gpt-oss-20b$",
+          "coding": 2,
+          "reasoning": 2,
+          "toolCalling": true,
+          "contextWindow": 128000
+        },
+        {
+          "match": "kimi-k2\\.\\d",
+          "coding": 3,
+          "reasoning": 3,
+          "toolCalling": true,
+          "contextWindow": 131072
+        },
+        {
+          "match": "deepseek-v4-(?:flash|pro)",
+          "coding": 3,
+          "reasoning": 3,
+          "toolCalling": true,
+          "contextWindow": 131072
+        },
+        {
+          "match": "nemotron-3-120b",
+          "coding": 3,
+          "reasoning": 3,
+          "toolCalling": true,
+          "contextWindow": 131072
+        },
+        {
+          "match": "glm-5\\.3(?:-flash)?$",
+          "coding": 2,
+          "reasoning": 2,
+          "toolCalling": true,
+          "contextWindow": 131072
+        },
+        {
+          "match": "glm-4\\.7-flash$",
+          "coding": 2,
+          "reasoning": 2,
+          "toolCalling": true,
+          "contextWindow": 131072
+        },
+        {
+          "match": "qwen2\\.5-coder-32b",
+          "coding": 3,
+          "reasoning": 1,
+          "contextWindow": 32768
+        },
+        {
+          "match": "qwen3",
+          "coding": 2,
+          "reasoning": 2,
+          "toolCalling": true,
+          "contextWindow": 32768
+        },
+        {
+          "match": "llama-3\\.3-70b",
+          "coding": 2,
+          "reasoning": 2,
+          "toolCalling": true,
+          "contextWindow": 24000
+        },
+        {
+          "match": "mistral-small-3\\.1",
+          "coding": 2,
+          "reasoning": 2,
+          "toolCalling": true,
+          "contextWindow": 128000
+        },
+        {
+          "match": "gemma-4",
+          "coding": 2,
+          "reasoning": 2,
+          "contextWindow": 128000
+        },
+        {
+          "match": "deepseek-r1-distill",
+          "coding": 2,
+          "reasoning": 3,
+          "contextWindow": 32768
+        }
+      ],
+      "validationModel": "@cf/openai/gpt-oss-20b"
+    },
+    "vercel": {
+      "displayName": "Vercel AI Gateway",
+      "envKeys": ["VERCEL_AI_GATEWAY_API_KEY", "AI_GATEWAY_API_KEY"],
+      "baseUrl": "https://ai-gateway.vercel.sh/v1",
+      "defaultPricing": "paid",
+      "note": "Metered per token against a credit balance, so every model is paid unless the gateway itself reports a zero price.",
+      "exclude": [
+        "embed",
+        "image",
+        "video",
+        "tts",
+        "rerank",
+        "whisper",
+        "transcri"
+      ],
+      "rules": [
+        {
+          "match": ".",
+          "coding": 2,
+          "reasoning": 2
+        }
+      ]
+    },
+    "cohere": {
+      "displayName": "Cohere",
+      "envKeys": ["COHERE_API_KEY"],
+      "baseUrl": "https://api.cohere.ai/compatibility/v1",
+      "defaultPricing": "free_tier",
+      "trustListingPrice": false,
+      "note": "Assumes a free trial key (rate limited, monthly call cap).",
+      "exclude": [
+        "embed",
+        "rerank",
+        "transcribe",
+        "parse",
+        "vision",
+        "translate",
+        "aya",
+        "arabic",
+        "image"
+      ],
+      "rules": [
+        {
+          "match": "^command-a-reasoning",
+          "coding": 2,
+          "reasoning": 3,
+          "toolCalling": true,
+          "structuredOutput": true,
+          "contextWindow": 256000
+        },
+        {
+          "match": "^command-a-(?:plus-\\d|03-2025$)",
+          "coding": 2,
+          "reasoning": 2,
+          "toolCalling": true,
+          "structuredOutput": true,
+          "contextWindow": 256000
+        },
+        {
+          "match": "^command-r-plus-08-2024$",
+          "coding": 2,
+          "reasoning": 2,
+          "toolCalling": true,
+          "structuredOutput": true,
+          "contextWindow": 128000
+        },
+        {
+          "match": "^command-r-08-2024$",
+          "coding": 1,
+          "reasoning": 1,
+          "toolCalling": true,
+          "structuredOutput": true,
+          "contextWindow": 128000
+        },
+        {
+          "match": "^command-r7b",
+          "coding": 1,
+          "reasoning": 1,
+          "toolCalling": true,
+          "contextWindow": 128000
+        },
+        {
+          "match": "^north-mini-code",
+          "coding": 2,
+          "reasoning": 1,
+          "toolCalling": true,
+          "contextWindow": 256000
+        }
+      ],
+      "validationModel": "command-r7b-12-2024"
+    },
+    "huggingface": {
+      "displayName": "Hugging Face",
+      "envKeys": ["HUGGINGFACE_API_KEY", "HF_TOKEN"],
+      "baseUrl": "https://router.huggingface.co/v1",
+      "defaultPricing": "free_tier",
+      "trustListingPrice": false,
+      "note": "Inference Providers bill against a small monthly free credit; a 402 marks the provider exhausted and it is never topped up.",
+      "exclude": [
+        "safeguard",
+        "vision",
+        "-vl",
+        "phone",
+        "gguf",
+        "awq",
+        "fp8",
+        "bf16",
+        "nvfp4",
+        "exp$",
+        "-\\d{4}$"
+      ],
+      "rules": [
+        {
+          "match": "^openai/gpt-oss-120b$",
+          "coding": 3,
+          "reasoning": 3,
+          "toolCalling": true,
+          "structuredOutput": true
+        },
+        {
+          "match": "^openai/gpt-oss-20b$",
+          "coding": 2,
+          "reasoning": 2,
+          "toolCalling": true,
+          "structuredOutput": true
+        },
+        {
+          "match": "^Qwen/Qwen3-Coder",
+          "coding": 3,
+          "reasoning": 2,
+          "toolCalling": true
+        },
+        {
+          "match": "^Qwen/Qwen3\\.8-27B$",
+          "coding": 2,
+          "reasoning": 2,
+          "toolCalling": true
+        },
+        {
+          "match": "^deepseek-ai/DeepSeek-V(?:3\\.2|4-Flash|4\\.1-Flash)$",
+          "coding": 3,
+          "reasoning": 3,
+          "toolCalling": true
+        },
+        {
+          "match": "^zai-org/GLM-(?:5\\.3-Flash|4\\.7-Flash)$",
+          "coding": 2,
+          "reasoning": 2,
+          "toolCalling": true
+        },
+        {
+          "match": "^meta-llama/Llama-3\\.3-70B-Instruct$",
+          "coding": 2,
+          "reasoning": 2,
+          "toolCalling": true
+        }
+      ],
+      "validationModel": "openai/gpt-oss-20b"
+    },
+    "openrouter": {
+      "displayName": "OpenRouter",
+      "envKeys": ["OPENROUTER_API_KEY"],
+      "baseUrl": "https://openrouter.ai/api/v1",
+      "defaultPricing": "unknown",
+      "note": "Not one model: every zero-priced model in the live catalog is a separate pool member (free flag comes from the provider's own pricing, never from a name). The openrouter/free router is a low-tier member whose actual served model is recorded per call.",
+      "exclude": ["content-safety", "lyria", "guard"],
+      "freeFallback": {
+        "coding": 1,
+        "reasoning": 1
+      },
+      "rules": [
+        {
+          "match": "nemotron-3-(?:ultra|super)",
+          "coding": 3,
+          "reasoning": 3
+        },
+        {
+          "match": "qwen3\\.8-27b",
+          "coding": 2,
+          "reasoning": 2
+        },
+        {
+          "match": "gemma-4",
+          "coding": 2,
+          "reasoning": 2
+        },
+        {
+          "match": "nex-n2\\.5-pro",
+          "coding": 2,
+          "reasoning": 2
+        },
+        {
+          "match": "laguna-s-",
+          "coding": 2,
+          "reasoning": 2
+        },
+        {
+          "match": "inkling(?!-small)",
+          "coding": 2,
+          "reasoning": 2
+        },
+        {
+          "match": "north-mini-code",
+          "coding": 2,
+          "reasoning": 1
+        },
+        {
+          "match": "^openrouter/free$",
+          "coding": 1,
+          "reasoning": 1
+        }
+      ],
+      "effort": {
+        "kind": "openrouter_reasoning",
+        "requireDiscoveredSupport": true
+      }
+    },
+    "sambanova": {
+      "displayName": "SambaNova",
+      "envKeys": ["SAMBANOVA_API_KEY"],
+      "baseUrl": "https://api.sambanova.ai/v1",
+      "defaultPricing": "free_tier",
+      "trustListingPrice": false,
+      "exclude": ["embed", "whisper", "guard"],
+      "rules": [
+        {
+          "match": "^DeepSeek-V3",
+          "coding": 3,
+          "reasoning": 3,
+          "toolCalling": true,
+          "structuredOutput": true,
+          "contextWindow": 131072
+        },
+        {
+          "match": "^gpt-oss-120b$",
+          "coding": 3,
+          "reasoning": 3,
+          "toolCalling": true,
+          "structuredOutput": true,
+          "contextWindow": 131072
+        },
+        {
+          "match": "^MiniMax-M",
+          "coding": 3,
+          "reasoning": 3,
+          "toolCalling": true,
+          "contextWindow": 131072
+        },
+        {
+          "match": "^Meta-Llama-3\\.3-70B",
+          "coding": 2,
+          "reasoning": 2,
+          "toolCalling": true,
+          "contextWindow": 131072
+        },
+        {
+          "match": "^gemma-",
+          "coding": 2,
+          "reasoning": 2,
+          "contextWindow": 131072
+        }
+      ],
+      "validationModel": "gpt-oss-120b"
+    },
+    "nvidia": {
+      "displayName": "NVIDIA",
+      "envKeys": ["NVIDIA_API_KEY"],
+      "baseUrl": "https://integrate.api.nvidia.com/v1",
+      "defaultPricing": "free_tier",
+      "trustListingPrice": false,
+      "note": "build.nvidia.com hosted endpoints run on trial credits and rate limits.",
+      "exclude": [
+        "content-safety",
+        "guard",
+        "embed",
+        "vision",
+        "vila",
+        "neva",
+        "kosmos",
+        "fuyu",
+        "deplot",
+        "detector",
+        "calibration",
+        "video",
+        "cosmos",
+        "diffusion",
+        "riva",
+        "parse",
+        "rerank",
+        "reward",
+        "lora"
+      ],
+      "rules": [
+        {
+          "match": "^nvidia/llama-3\\.1-nemotron-ultra-253b",
+          "coding": 3,
+          "reasoning": 3,
+          "toolCalling": true,
+          "contextWindow": 128000
+        },
+        {
+          "match": "^nvidia/nemotron-3-(?:super|ultra)",
+          "coding": 3,
+          "reasoning": 3,
+          "toolCalling": true,
+          "contextWindow": 131072
+        },
+        {
+          "match": "^nvidia/nemotron-(?:3\\.5-lightning|nano-3)",
+          "coding": 2,
+          "reasoning": 2,
+          "toolCalling": true,
+          "contextWindow": 131072
+        },
+        {
+          "match": "^moonshotai/kimi-k[23]",
+          "coding": 3,
+          "reasoning": 3,
+          "toolCalling": true,
+          "contextWindow": 131072
+        },
+        {
+          "match": "^z-ai/glm-5\\.3(?:-flash)?$",
+          "coding": 2,
+          "reasoning": 2,
+          "toolCalling": true,
+          "contextWindow": 131072
+        },
+        {
+          "match": "^openai/gpt-oss-20b$",
+          "coding": 2,
+          "reasoning": 2,
+          "toolCalling": true,
+          "contextWindow": 131072
+        },
+        {
+          "match": "^mistralai/mistral-large-2",
+          "coding": 2,
+          "reasoning": 2,
+          "toolCalling": true,
+          "contextWindow": 128000
+        },
+        {
+          "match": "^google/gemma-4-31b-it$",
+          "coding": 2,
+          "reasoning": 2,
+          "contextWindow": 131072
+        },
+        {
+          "match": "^mistralai/codestral",
+          "coding": 2,
+          "reasoning": 1,
+          "contextWindow": 32768
+        }
+      ],
+      "validationModel": "openai/gpt-oss-20b"
+    },
+    "zai": {
+      "displayName": "Z.ai",
+      "envKeys": ["ZAI_API_KEY", "Z_AI_API_KEY"],
+      "baseUrl": "https://api.z.ai/api/paas/v4",
+      "defaultPricing": "paid",
+      "note": "Only Flash models are free; everything else is metered.",
+      "exclude": ["embed", "vision", "-v$", "image", "video"],
+      "rules": [
+        {
+          "match": "flash",
+          "coding": 2,
+          "reasoning": 2,
+          "toolCalling": true,
+          "contextWindow": 131072,
+          "pricing": "free_tier"
+        },
+        {
+          "match": "^glm-",
+          "coding": 3,
+          "reasoning": 3,
+          "toolCalling": true,
+          "contextWindow": 131072,
+          "pricing": "paid"
+        }
+      ]
+    }
+  }
+}
