@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "updated_at": "2026-01-15T10:00:00.000Z",
+  "health": {
+    "version": 1,
+    "providers": {},
+    "models": {
+      "alpha/model-big": {
+        "state": "RATE_LIMITED",
+        "lastSuccessAt": "2026-01-15T09:00:00.000Z",
+        "lastFailureAt": "2026-01-15T09:59:30.000Z",
+        "failureCategory": "rate_limited",
+        "lastError": "HTTP 429: synthetic fixture rate limit",
+        "retryAfter": "2026-01-15T10:30:00.000Z",
+        "quotaResetAt": null,
+        "consecutiveFailures": 1,
+        "avgLatencyMs": 800
+      }
+    }
+  },
+  "models": [
+    {
+      "provider": "alpha",
+      "model": "model-big",
+      "pricing": "free_tier",
+      "source": "discovered",
+      "capabilities": {
+        "contextWindow": 100000,
+        "toolCalling": true,
+        "structuredOutput": true,
+        "coding": 3,
+        "reasoning": 3
+      }
+    },
+    {
+      "provider": "bravo",
+      "model": "model-small",
+      "pricing": "free",
+      "source": "discovered",
+      "capabilities": {
+        "contextWindow": 100000,
+        "toolCalling": true,
+        "structuredOutput": true,
+        "coding": 2,
+        "reasoning": 2
+      }
+    }
+  ],
+  "unclassified": { "alpha": 0, "bravo": 0 },
+  "selected": {
+    "provider": "alpha",
+    "model": "model-big",
+    "at": "2026-01-15T09:00:00.000Z"
+  },
+  "lastFallback": null,
+  "validation": {}
+}
