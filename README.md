@@ -1,13 +1,15 @@
 # model-pool
 
+> **Статус:** работа с живыми провайдерами не проверялась: тесты используют только подставной `fetch`. Каталог бесплатных лимитов и уровней моделей — ручной снимок на дату подготовки репозитория и может устареть. Пакет не опубликован в npm (`private: true`); CLI нет.
+
 **English summary.** `model-pool` is a small TypeScript library that routes
 text-completion requests across several free / free-tier LLM API providers
 (any OpenAI-compatible `/chat/completions` endpoint). Requests are filtered by
 policy, price and capability, then ranked by a deterministic score; every
 provider failure is classified (rate limit, quota, auth, outage, bad request)
-and fed into a persisted health model with retry times, so the pool falls back
-to the next model instead of failing. Paid models are never selected, secrets
-are redacted from everything that leaves the process. It was extracted from an
+and fed into a persisted health model with retry times, so the code can try
+the next model. By default, paid and unknown-priced models are not selected;
+the code redacts secrets from values that it logs, persists or returns. It was extracted from an
 internal tooling monorepo; it is tested against a mocked transport only (no
 live provider was called while preparing this repository). `npm test`
 (136 tests), `npm run typecheck`, `npm run build` and an offline
@@ -91,6 +93,9 @@ stateDiagram-v2
 
 ## 3. Ключевые решения и почему
 
+Ниже описано поведение, покрытое тестами с подставным `fetch`; на живых
+провайдерах оно не подтверждено.
+
 - **Выбор по возможностям и цене, а не round-robin.** Запрос сначала
   отсекается политикой (платные и неклассифицированные модели недоступны),
   потом требованиями роли (минимальный уровень coding/reasoning, размер
@@ -156,11 +161,14 @@ stateDiagram-v2
 
 Честно о том, чего здесь нет или что не проверено:
 
-- **Живые провайдеры не проверялись.** При подготовке репозитория ни один
+- **Статус пакета: только тесты с подставным `fetch`, без проверки живых провайдеров.** При подготовке репозитория ни один
   реальный запрос не отправлялся. Формы ответов (`/models`, заголовки
   rate-limit, тексты ошибок) взяты из кода исходного проекта и подставных
   ответов в тестах; реальное поведение провайдеров может отличаться.
   `npm run demo:live` для такой проверки написан, но не запускался с ключами.
+  Каталог бесплатных лимитов и уровней моделей — ручной снимок на дату
+  подготовки репозитория, поэтому может устареть. Пакет не опубликован в npm
+  (`private: true`), CLI нет.
 - **Каталог - снимок допущений.** Что модель «бесплатная» и какого она
   уровня (coding/reasoning 0-3), задано вручную regex-правилами и описывает
   условия на момент написания; условия free-тарифов провайдеров меняются.
@@ -177,6 +185,17 @@ stateDiagram-v2
 - Нет CLI и нет публикации в npm (`private: true`).
 - Роли и пороги качества в `fallback.ts` (`qa_review`, `maxTokens: 8192`
   для планирования) - значения исходного проекта, не универсальные.
+
+### Альтернативы и отличие
+
+Ближайшие альтернативы — LiteLLM и OpenRouter: они ориентированы на более
+широкую маршрутизацию между провайдерами, включая платные модели, оптимизацию
+цен и другие сценарии. Этот модуль уже по охвату: его стандартная политика —
+только бесплатные модели, а неизвестная цена считается платной; в коде также
+есть учёт квот и `retry-after`, персистентное состояние здоровья провайдеров и
+защита от вывода секретов за пределы памяти. Это поведение проверяется только
+подставным `fetch`, а не реальными провайдерами; по охвату сценариев модуль
+уступает этим альтернативам.
 
 Возможные следующие шаги (не сделано): запуск `demo:live` на реальных ключах
 и сверка каталога, оценка токенов настоящим токенизатором, пользовательские
